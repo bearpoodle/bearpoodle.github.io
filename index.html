@@ -40,7 +40,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 		const container = $('.container');
-		var leniCount = 50;
+		var leniCount = 0;
 		var leniContent = '';
 
 		var theWidth = 0;
@@ -52,6 +52,13 @@
 		function contWiHe() {
 			theWidth = container.width();
 			theHeight = container.height();
+			if (theWidth > 1200) {
+				leniCount = 70;
+			} else if (theWidth > 700) {
+				leniCount = 50;
+			}
+			else { leniCount = 20; }
+			createLenis(leniCount);
 		}
 		contWiHe();
 
@@ -59,27 +66,31 @@
 			contWiHe();
 		});
 
-		for (var i = 0; i < leniCount; i++) {
-			var rndX = randomNumBetween(0, theWidth, true) + 1;
-			var rndY = randomNumBetween(0, theHeight, true) + 1;
+		function createLenis(count) {
+			leniContent = '';
+			for (var i = 0; i < count; i++) {
+				var rndX = randomNumBetween(0, theWidth, true) + 1;
+				var rndY = randomNumBetween(0, theHeight, true) + 1;
 
-			var coin = [-1, 1];
-			var flipX = randomArrayItem(coin);
-			var flipY = randomArrayItem(coin);
+				var coin = [-1, 1];
+				var flipX = randomArrayItem(coin);
+				var flipY = randomArrayItem(coin);
 
-			var rndDX = randomNumBetween(1, 3, true) * flipX;
-			var rndDY = randomNumBetween(1, 3, true) * flipY;
+				var rndDX = randomNumBetween(1, 3, true) * flipX;
+				var rndDY = randomNumBetween(1, 3, true) * flipY;
 
-			if (theWidth < rndX + leniWidth) {
-				rndX -= leniWidth;
+				if (theWidth < rndX + leniWidth) {
+					rndX -= leniWidth;
+				}
+				if (theHeight < rndY + leniHeight) {
+					rndY -= leniHeight;
+				}
+
+				leniContent += '<img src="leni.png" class="leni leni-' + i + '" data-dx="' + rndDX + '" data-dy="' + rndDY + '" data-x="' + rndX + '" data-y="' + rndY + '" style="top:' + rndY + 'px;left:' + rndX + 'px;">';
 			}
-			if (theHeight < rndY + leniHeight) {
-				rndY -= leniHeight;
-			}
-
-			leniContent += '<img src="leni.png" class="leni leni-' + i + '" data-dx="' + rndDX + '" data-dy="' + rndDY + '" data-x="' + rndX + '" data-y="' + rndY + '" style="top:' + rndY + 'px;left:' + rndX + 'px;">';
+			container.html(leniContent);
 		}
-		container.html(leniContent);
+		createLenis(leniCount);
 
 		function animateLenis() {
 			requestAnimationFrame(animateLenis);
